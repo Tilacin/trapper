@@ -96,7 +96,7 @@ const GameArea = () => {
 
     return (
       <>
-        <h2>Score: {score}</h2>
+        <h2 className='score-start'>Score: {score}</h2>
         <Config
           columns={parseInt(columns, 10)}
           setColumns={(value) => {
@@ -109,7 +109,7 @@ const GameArea = () => {
             setHorse([]); // Добавьте это, чтобы перегенерировать набор кротов
           }}
         />
-        <button onClick={startGame}>Start</button>
+        <button className="button-start" onClick={startGame}>Start</button>
       </>
     )
   }
@@ -118,7 +118,7 @@ const GameArea = () => {
 
     <>
       <div className='score-container'>
-        <h2>Score: {score}</h2>
+        <h2 className='score-text'>Score: {score}</h2>
         <Countdown endGame={endGame} gameOver={gameOver} />
       </div>
 
@@ -136,9 +136,9 @@ const GameArea = () => {
         {individualHorse.hit ? (
           <img src='/flash.png' alt='flash' />
         ) : (individualHorse.isCrab ? (
-          <img src='/crab.png' alt='crab' />
+          <img src='/crab.png' alt='crab' width={80} height={80}/>
         ) : (
-          <img src='/seahorse.png' alt='seahorse' draggable='false' />
+          <img className="img-seahorse" src='/seahorse.png' alt='seahorse' draggable='false' />
         ))}
       </div>
     </div>

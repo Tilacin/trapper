@@ -3,150 +3,178 @@
 @tailwind utilities; */
 
 html {
-    box-sizing: border-box;
-    user-select: none;
-  }
-  
-  *,
-  *:before,
-  *:after {
-    box-sizing: inherit;
-  }
-  
-  body {
-    background-color: #fefefe;
-    color: #111111;
-    margin: 0;
-    padding: 0;
-    line-height: 1.5;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  
-  #root {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    background-image: url(../public/area1.jpg);
-   background-position: center;
-   background-size: cover;
-  }
-  
-  main {
-    
-    margin-inline: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-   
-   
-  }
-  
- 
-  
-  h1 {
-    margin: 2px;
-  }
-  
+  box-sizing: border-box;
+  user-select: none;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  background-color: #fefefe;
+  color: #111111;
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-image: url(../area1.jpg);
+  background-position: center;
+  background-size: cover;
+}
+
+main {
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin: 2px;
+}
+.config {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: yellow;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 1rem;
+}
+
+.config-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.score-text,
+.score-start {
+  color: yellow;
+}
+
+.horse-container {
+  backdrop-filter: blur(4px);
+  display: grid;
+  cursor: crosshair;
+  border: 1px solid rgba(255, 255, 0, 0.2);
+  border-radius: 0.75rem;
+  min-width: 70vw;
+  min-height: 70vh;
+  place-items: center;
+}
+
+.horse {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 0, 0.2);
+}
+
+.horse > div {
+  text-align: center;
+
+  transform: scale(0);
+  transition: transform 0.2s;
+}
+
+.horse.active > div {
+  transform: scale(1);
+}
+
+.flash {
+  width: fit-content;
+  height: fit-content;
+}
+
+.config-button {
+  box-sizing: border-box;
+  background-color: #07b6f1bd;
+  margin-block: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: yellow;
+  width: 30%;
+  transition: transform 0.3s ease;
+}
+.config-button:hover {
+  transform: scale(1.1);
+}
+.config-button:active {
+  background-color: rgb(53, 21, 233);
+}
+.button-start:hover {
+  transform: scale(1.1);
+}
+.button-start:active {
+  background-color: rgb(53, 21, 233);
+}
+
+.button-start {
+  background-color: #072af1;
+  margin-block: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: yellow;
+  width: 30%;
+  transition: transform 0.3s ease;
+}
+.button-start:hover {
+  transform: scale(1.1);
+}
+.button-start:active {
+  background-color: rgb(53, 21, 233);
+}
+.countdown {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: yellow;
+}
+
+.score-container {
+  max-width: 900px;
+  width: 90vw;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.countdown span {
+  margin-inline-end: 0.5rem;
+}
+
+.img-seahorse {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
+}
+
+@media (min-width: 992px) {
   .horse-container {
-   
-    backdrop-filter: blur(4px);
-    display: grid;
-   
-   
-    cursor: crosshair;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #FFECB3;
-    border-radius: 0.75rem;
-    
-    min-width: 70vw;
-    min-height: 70vh;
-    place-items: center;
-    
-  }
-  
-  .horse {
-    width: 100px;
-    height: 100px;
-    overflow: hidden;
-    border-color: #FFECB3;
-    border-width: 1px;
-    border-style: solid;
-   
-  }
-  
-  .horse>div {
-    text-align: center;
-    
-    transform: scale(0);
-    transition: transform 0.2s;
-  }
-  
-  .horse.active>div {
-    transform: scale(1);
+    grid-gap: 2rem;
+    padding: 2rem;
   }
 
-  .flash {
-    width: fit-content;
-    height: fit-content;
+  .horse > div {
+    font-size: 54px;
+    line-height: 80px;
   }
-  
-  button {
-    background-color: #2a4149;
-    margin-block: 1.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #fefefe;
-    width: 30%;
-  }
-  
-  input {
-    padding: 0.25rem;
-    border-radius: 0.25rem;
-    margin: 0.5rem;
-    min-width: 80px;
-    border: 1px solid #ccc;
-  }
-  
-  .countdown {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
-
-  .score-container{
-    max-width: 900px;
-    width: 90vw;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .countdown span {
-    margin-inline-end: 0.5rem;
-  }
-  
-  img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 1;
-  }
-  
-  @media (min-width: 992px) {
-    .horse-container {
-      grid-gap: 2rem;
-      padding: 2rem;
-    }
-  
-   
-  
-    .horse>div {
-      font-size: 54px;
-      line-height: 80px;
-    }
-  }
+}

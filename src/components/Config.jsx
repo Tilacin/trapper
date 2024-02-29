@@ -7,33 +7,37 @@ const Config = ({ setColumns, setRows }) => {
     setColumns(columns);
     setRows(rows);
   };
-  
+
   return (
     <div>
-      <div>
-        <label>Выберите размер:</label>
-        <br />
-        <button onClick={() => handleSetColumns('2*2')}>
-          2x2
-        </button>
-        <button onClick={() => handleSetColumns('2*3')}>
-          2x3
-        </button>
-        <button onClick={() => handleSetColumns('3*3')}>
-          3x3
-        </button>
-        <button onClick={() => handleSetColumns('3*4')}>
-          3x4
-        </button>
-        <button onClick={() => handleSetColumns('4*4')}>
-          4x4
-        </button>
-        <button onClick={() => handleSetColumns('5*5')}>
-          5x5
-        </button>
-        <button onClick={() => handleSetColumns('6*6')}>
-          6x6
-        </button>
+      <div className='config'>
+        <label >Выберите размер поля:</label>
+        <div className='config-container'>
+          <button className='config-button' onClick={() => handleSetColumns('2*2')}>
+            2x2
+          </button>
+          <button className='config-button' onClick={() => handleSetColumns('2*3')}>
+            2x3
+          </button>
+          <button className='config-button' onClick={() => handleSetColumns('3*3')}>
+            3x3
+          </button>
+          <button className='config-button' onClick={() => handleSetColumns('3*4')}>
+            3x4
+          </button>
+          <button className='config-button' onClick={() => handleSetColumns('4*4')}>
+            4x4
+          </button>
+          <button className='config-button' onClick={() => handleSetColumns('5*5')}>
+            5x5
+          </button>
+          <button className='config-button' onClick={() => handleSetColumns('5*6')}>
+            5x6
+          </button>
+          <button className='config-button' onClick={() => handleSetColumns('6*6')}>
+            6x6
+          </button>
+        </div>
       </div>
     </div>
   );
