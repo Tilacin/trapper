@@ -29,6 +29,7 @@ const Countdown = ({ endGame, gameOver }) => {
 
   return (
     <div className='countdown'>
+      
       <span>⏳</span>
       {countdown}
     </div>

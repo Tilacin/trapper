@@ -12,13 +12,13 @@ const GameArea = () => {
 
 
   const generateHorse = () => {
-  const newHorses = [];
-  for (let i = 0; i < columns * rows; i++) {
-    const isCrab = Math.random() < 0.3;
-    newHorses.push({ id: i, active: false, isCrab }); // Возвращаем сгенерированных лошадей напрямую
+    const newHorses = [];
+    for (let i = 0; i < columns * rows; i++) {
+      const isCrab = Math.random() < 0.3;
+      newHorses.push({ id: i, active: false, isCrab }); // Возвращаем сгенерированных лошадей напрямую
+    }
+    return newHorses;
   }
-  return newHorses;
-}
 
   const activateHorse = () => {
     const horseIndex = Math.floor(Math.random() * columns * rows);
@@ -96,7 +96,8 @@ const GameArea = () => {
 
     return (
       <>
-        <h2 className='score-start'>Score: {score}</h2>
+        <h2 className='score-start'>Очки: {score}</h2>
+        <span className='size-start'>{columns}  X {rows}</span>
         <Config
           columns={parseInt(columns, 10)}
           setColumns={(value) => {
@@ -119,9 +120,19 @@ const GameArea = () => {
     <>
       <div className='score-container'>
         <h2 className='score-text'>Score: {score}</h2>
-        <Countdown endGame={endGame} gameOver={gameOver} />
-      </div>
 
+
+        <Countdown endGame={endGame} gameOver={gameOver} />
+        <div className='setting'>
+          <img src='/play.png' alt='play' width={35} height={35} />
+          <img src='/house.png' alt='house' width={35} height={35} />
+        </div>
+
+      </div>
+      <span className="countdown">
+      ТУР: 1
+      </span>
+      
       <div
         className='horse-container'
         style={{
@@ -129,21 +140,22 @@ const GameArea = () => {
           gridTemplateRows: `repeat(${rows}, 1fr)`,
         }}
       >
+
         {horse.map((individualHorse, index) => (
-  individualHorse && (
-    <div key={individualHorse.id} className={`horse ${individualHorse.active ? 'active' : ''}`}>
-      <div onClick={() => handleHorseClick(index)}>
-        {individualHorse.hit ? (
-          <img src='/flash.png' alt='flash' />
-        ) : (individualHorse.isCrab ? (
-          <img src='/crab.png' alt='crab' width={80} height={80}/>
-        ) : (
-          <img className="img-seahorse" src='/seahorse.png' alt='seahorse' draggable='false' />
+          individualHorse && (
+            <div key={individualHorse.id} className={`horse ${individualHorse.active ? 'active' : ''}`}>
+              <div onClick={() => handleHorseClick(index)}>
+                {individualHorse.hit ? (
+                  <img src='/flash.png' alt='flash' />
+                ) : (individualHorse.isCrab ? (
+                  <img src='/crab.png' alt='crab' width={80} height={80} />
+                ) : (
+                  <img className="img-seahorse" src='/seahorse.png' alt='seahorse' draggable='false' />
+                ))}
+              </div>
+            </div>
+          )
         ))}
-      </div>
-    </div>
-  )
-))}
 
       </div>
     </>
