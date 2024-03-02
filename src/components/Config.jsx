@@ -42,7 +42,7 @@ const Config = ({ setColumns, setRows }) => {
             6x6
           </button>
         </div>
-        <span>Изменить фон </span>
+        <span > Изменить фон </span>
       </div>
     </div>
   );

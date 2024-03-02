@@ -1,44 +1,34 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const Countdown = ({ endGame, gameOver }) => {
-  const [countdown, setCountdown] = useState(null)
-
-  useEffect(() => {
-    setCountdown(60)
-  }, [])
-
+const Countdown = ({ updateCountdown, initialCountdown }) => {
   useEffect(() => {
     let interval;
-    if (countdown && !gameOver) {
+
+    if (initialCountdown > 0) {
       interval = setInterval(() => {
-        setCountdown((prevCountdown) => prevCountdown - 1);
+        updateCountdown(prevCountdown => prevCountdown - 1);
       }, 1000);
+    } else {
+      clearInterval(interval);
     }
-  
-    if (countdown === 0) {
-      endGame();
-    }
-  
+
     return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
+      clearInterval(interval);
     };
-  }, [countdown, gameOver]);
+  }, [initialCountdown, updateCountdown]);
 
   return (
     <div className='countdown'>
-      
       <span>⏳</span>
-      {countdown}
+      {initialCountdown}
     </div>
-  )
-}
-
-Countdown.propTypes = {
-  endGame: PropTypes.func,
-  gameOver: PropTypes.bool
+  );
 };
 
-export default Countdown
+Countdown.propTypes = {
+  updateCountdown: PropTypes.func,
+  initialCountdown: PropTypes.number
+};
+
+export default Countdown;

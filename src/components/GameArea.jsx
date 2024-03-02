@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Countdown from './Countdown'
 import Config from './Config'
+import ProgressPage from './ProgressPage'
 
 const GameArea = () => {
   const [gameOver, setGameOver] = useState(true)
@@ -9,8 +10,14 @@ const GameArea = () => {
   const [horseTimeout, setHorseTimeout] = useState(null)
   const [columns, setColumns] = useState(3)
   const [rows, setRows] = useState(3)
+  const [level, setLevel] = useState(1);
+  const [countdown, setCountdown] = useState(20);
 
+  const handleLevelUp = () => {
+    setLevel(level + 1); // Увеличение уровня
+  };
 
+  
   const generateHorse = () => {
     const newHorses = [];
     for (let i = 0; i < columns * rows; i++) {
@@ -97,7 +104,7 @@ const GameArea = () => {
     return (
       <>
         <h2 className='score-start'>Очки: {score}</h2>
-        <span className='size-start'>{columns}  X {rows}</span>
+        <span className='size-start'>размер: {columns}  X {rows}</span>
         <Config
           columns={parseInt(columns, 10)}
           setColumns={(value) => {
@@ -110,56 +117,57 @@ const GameArea = () => {
             setHorse([]); // Добавьте это, чтобы перегенерировать набор кротов
           }}
         />
-        <button className="button-start" onClick={startGame}>Start</button>
+        <button className="glow-on-hover" onClick={startGame}>Играть</button>
       </>
     )
   }
+  if (countdown === 0 && !gameOver) {
+    return <ProgressPage />;
+  } else if (countdown !== 0 && !gameOver) {
+    return (
 
-  return (
+      <>
+        <div className='score-container'>
+          <h2 className='score-text'>Score: {score}</h2>
+          <Countdown updateCountdown={setCountdown} initialCountdown={countdown} />
+          <div className='setting'>
+            <img src='/play.png' alt='play' width={35} height={35} />
+            <img src='/house.png' alt='house' width={35} height={35} onClick={endGame} />
+          </div>
 
-    <>
-      <div className='score-container'>
-        <h2 className='score-text'>Score: {score}</h2>
-
-
-        <Countdown endGame={endGame} gameOver={gameOver} />
-        <div className='setting'>
-          <img src='/play.png' alt='play' width={35} height={35} />
-          <img src='/house.png' alt='house' width={35} height={35} />
         </div>
+        <span className="countdown">
+          УРОВЕНЬ: 1
+        </span>
 
-      </div>
-      <span className="countdown">
-      ТУР: 1
-      </span>
-      
-      <div
-        className='horse-container'
-        style={{
-          gridTemplateColumns: `repeat(${columns}, 1fr)`,
-          gridTemplateRows: `repeat(${rows}, 1fr)`,
-        }}
-      >
+        <div
+          className='horse-container'
+          style={{
+            gridTemplateColumns: `repeat(${columns}, 1fr)`,
+            gridTemplateRows: `repeat(${rows}, 1fr)`,
+          }}
+        >
 
-        {horse.map((individualHorse, index) => (
-          individualHorse && (
-            <div key={individualHorse.id} className={`horse ${individualHorse.active ? 'active' : ''}`}>
-              <div onClick={() => handleHorseClick(index)}>
-                {individualHorse.hit ? (
-                  <img src='/flash.png' alt='flash' />
-                ) : (individualHorse.isCrab ? (
-                  <img src='/crab.png' alt='crab' width={80} height={80} />
-                ) : (
-                  <img className="img-seahorse" src='/seahorse.png' alt='seahorse' draggable='false' />
-                ))}
+          {horse.map((individualHorse, index) => (
+            individualHorse && (
+              <div key={individualHorse.id} className={`horse ${individualHorse.active ? 'active' : ''}`}>
+                <div onClick={() => handleHorseClick(index)}>
+                  {individualHorse.hit ? (
+                    <img src='/flash.png' alt='flash' />
+                  ) : (individualHorse.isCrab ? (
+                    <img src='/crab.png' alt='crab' width={80} height={80} onClick={endGame} />
+                  ) : (
+                    <img className="img-seahorse" src='/seahorse.png' alt='seahorse' draggable='false' />
+                  ))}
+                </div>
               </div>
-            </div>
-          )
-        ))}
+            )
+          ))}
 
-      </div>
-    </>
-  )
+        </div>
+      </>
+    )
+  }
 }
 
 
