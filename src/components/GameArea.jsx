@@ -11,12 +11,8 @@ const GameArea = () => {
   const [columns, setColumns] = useState(3)
   const [rows, setRows] = useState(3)
   const [level, setLevel] = useState(1);
-  const [countdown, setCountdown] = useState(20);
-
-  const handleLevelUp = () => {
-    setLevel(level + 1); // Увеличение уровня
-  };
-
+  const [countdown, setCountdown] = useState(100);
+  const [timeNumber, setTimeNumber] = useState(1400)
   
   const generateHorse = () => {
     const newHorses = [];
@@ -24,7 +20,7 @@ const GameArea = () => {
       const isCrab = Math.random() < 0.3;
       newHorses.push({ id: i, active: false, isCrab }); // Возвращаем сгенерированных лошадей напрямую
     }
-    return newHorses;
+    setHorse(newHorses)
   }
 
   const activateHorse = () => {
@@ -35,13 +31,13 @@ const GameArea = () => {
       updatedhorse[horseIndex].active = true;
       return updatedhorse;
     });
-
-    setHorseTimeout(
+ setHorseTimeout(
       setTimeout(() => {
         deactivateHorse(horseIndex);
-      }, Math.floor(Math.random() * 600 + 1200))//время показа конька
+      }, Math.floor(Math.random() * 600 + timeNumber))//время показа конька
     );
   }
+  
   const deactivateHorse = (index) => {
     setHorse((prevhorse) => {
       const updatedhorse = [...prevhorse]
@@ -58,7 +54,7 @@ const GameArea = () => {
 
   const startGame = () => {
     setScore(0)
-    setHorse(generateHorse(columns, rows));
+    setHorse([]);
     setGameOver(false)
     generateHorse()
     setHorseTimeout(
@@ -66,29 +62,25 @@ const GameArea = () => {
         activateHorse()
       }, Math.floor(Math.random() * 600 + 400))
     )
+    setTimeNumber(1400)
+    setLevel(1)
   }
 
   const handleHorseClick = (index) => {
     setHorse((prevHorse) => {
-      return prevHorse.map((horse, i) => {
-        if (i === index) {
-          return {
-            ...horse,
-            hit: true,
-            active: false
-          };
-        }
-        return horse;
-      });
-    });
-    setScore((prevScore) => prevScore + 1);
+      const updatedhorse = [...prevHorse]
+      updatedhorse[index].hit = true
+      updatedhorse[index].active = false
+      return updatedhorse
+    })
+    setScore(score + 5)
   }
 
   const endGame = () => {
-    setGameOver(true);
-    setHorse([]); // Обнуляем массив лошадей
-    clearTimeout(horseTimeout); // Очищаем таймаут
-    setHorseTimeout(null); // Установка horseTimeout в null для его сброса
+    setGameOver(true)
+    setHorseTimeout(null)
+    setHorse([])
+    setCountdown(100)
   }
 
   useEffect(() => {
@@ -97,7 +89,13 @@ const GameArea = () => {
     }
   }, [horseTimeout])
 
+  const handleCrabClick = () => {
+    setGameOver(true)
+    setCountdown(100)
+    setHorseTimeout(null)
+  }
 
+   
 
   if (gameOver) {
 
@@ -106,26 +104,31 @@ const GameArea = () => {
         <h2 className='score-start'>Очки: {score}</h2>
         <span className='size-start'>размер: {columns}  X {rows}</span>
         <Config
-          columns={parseInt(columns, 10)}
-          setColumns={(value) => {
-            setColumns(value);
-            setHorse([]); // Добавьте это, чтобы перегенерировать набор кротов
-          }}
-          rows={parseInt(rows, 10)}
-          setRows={(value) => {
-            setRows(value);
-            setHorse([]); // Добавьте это, чтобы перегенерировать набор кротов
-          }}
+          columns={columns}
+          setColumns={setColumns}
+          rows={rows}
+          setRows={setRows}
         />
         <button className="glow-on-hover" onClick={startGame}>Играть</button>
       </>
     )
   }
   if (countdown === 0 && !gameOver) {
-    return <ProgressPage />;
+    return (
+      <ProgressPage
+        setCountdown={setCountdown}
+        score={score}
+        timeNumber={timeNumber}
+        setTimeNumber={setTimeNumber}
+        level={level}
+        setLevel={setLevel}
+        endGame={endGame}
+        setHorseTimeout={setHorseTimeout}
+        generateHorse={generateHorse}
+        activateHorse={activateHorse}
+      />)
   } else if (countdown !== 0 && !gameOver) {
     return (
-
       <>
         <div className='score-container'>
           <h2 className='score-text'>Score: {score}</h2>
@@ -134,12 +137,10 @@ const GameArea = () => {
             <img src='/play.png' alt='play' width={35} height={35} />
             <img src='/house.png' alt='house' width={35} height={35} onClick={endGame} />
           </div>
-
         </div>
         <span className="countdown">
-          УРОВЕНЬ: 1
+          УРОВЕНЬ:{level}
         </span>
-
         <div
           className='horse-container'
           style={{
@@ -147,7 +148,6 @@ const GameArea = () => {
             gridTemplateRows: `repeat(${rows}, 1fr)`,
           }}
         >
-
           {horse.map((individualHorse, index) => (
             individualHorse && (
               <div key={individualHorse.id} className={`horse ${individualHorse.active ? 'active' : ''}`}>
@@ -155,7 +155,7 @@ const GameArea = () => {
                   {individualHorse.hit ? (
                     <img src='/flash.png' alt='flash' />
                   ) : (individualHorse.isCrab ? (
-                    <img src='/crab.png' alt='crab' width={80} height={80} onClick={endGame} />
+                    <img src='/crab.png' alt='crab' width={80} height={80} onClick={handleCrabClick} />
                   ) : (
                     <img className="img-seahorse" src='/seahorse.png' alt='seahorse' draggable='false' />
                   ))}
@@ -163,13 +163,11 @@ const GameArea = () => {
               </div>
             )
           ))}
-
         </div>
       </>
     )
   }
 }
-
 
 export default GameArea
 
