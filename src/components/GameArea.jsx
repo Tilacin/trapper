@@ -2,8 +2,36 @@ import { useState, useEffect } from 'react'
 import Countdown from './Countdown'
 import Config from './Config'
 import ProgressPage from './ProgressPage'
+import PropTypes from 'prop-types';
 
-const GameArea = () => {
+const translations = {
+  ru: {
+    rating: 'Счёт',
+    size: 'Размер',
+    selectSize: 'Выберите размер поля',
+    changeBackground: 'Изменить фон',
+    play: "Играть",
+    levels: 'Уровень',
+    nextLevel: 'Следующий уровень',
+    endGames: 'Завершить игру',
+    ads: 'За просмотр рекламы',
+    bonus: 'Бонусный уровень',
+  },
+  en: {
+    rating: 'Score',
+    size: 'Size',
+    selectSize: 'Select the field size',
+    changeBackground: 'Change the background',
+    play: "Play",
+    levels: 'Level',
+    nextLevel: 'Next level',
+    endGames: 'End game',
+    ads: 'For watching the advertisement',
+    bonus: 'Bonus Level',
+  },
+};
+
+const GameArea = ({ handleNextImage }) => {
   const [gameOver, setGameOver] = useState(true)
   const [horse, setHorse] = useState([])
   const [score, setScore] = useState(0)
@@ -13,7 +41,15 @@ const GameArea = () => {
   const [level, setLevel] = useState(1);
   const [countdown, setCountdown] = useState(100);
   const [timeNumber, setTimeNumber] = useState(1400)
-  
+  const [language, setLanguage] = useState('en');
+
+  const handleLanguageChange = (selectedLanguage) => {
+    setLanguage(selectedLanguage);
+  };
+
+  const { rating, size, selectSize, changeBackground, play, levels, nextLevel, endGames, ads, bonus
+  } = translations[language];
+
   const generateHorse = () => {
     const newHorses = [];
     for (let i = 0; i < columns * rows; i++) {
@@ -31,13 +67,13 @@ const GameArea = () => {
       updatedhorse[horseIndex].active = true;
       return updatedhorse;
     });
- setHorseTimeout(
+    setHorseTimeout(
       setTimeout(() => {
         deactivateHorse(horseIndex);
       }, Math.floor(Math.random() * 600 + timeNumber))//время показа конька
     );
   }
-  
+
   const deactivateHorse = (index) => {
     setHorse((prevhorse) => {
       const updatedhorse = [...prevhorse]
@@ -95,19 +131,29 @@ const GameArea = () => {
     setHorseTimeout(null)
   }
 
-   
+
 
   if (gameOver) {
 
     return (
       <>
-        <h2 className='score-start'>Очки: {score}</h2>
-        <span className='size-start'>размер: {columns}  X {rows}</span>
+        <h2 className='score-start'>Счёт: {score}</h2>
+        <div className='language'>
+          <button onClick={() => handleLanguageChange('en')} className='language-button'>
+          <img src='/en.png' alt='flag en' width={50} height={25} />
+          Eng</button>
+          <button onClick={() => handleLanguageChange('ru')} className='language-button'>
+          <img src='/ru.png' alt='flag ru' width={50} height={25} />
+            Рус</button>
+        </div>
+
+        <span className='size-start'>Размер: {columns}  X {rows}</span>
         <Config
           columns={columns}
           setColumns={setColumns}
           rows={rows}
           setRows={setRows}
+          handleNextImage={handleNextImage}
         />
         <button className="glow-on-hover" onClick={startGame}>Играть</button>
       </>
@@ -167,6 +213,10 @@ const GameArea = () => {
       </>
     )
   }
+}
+
+GameArea.propTypes = {
+  handleNextImage: PropTypes.func
 }
 
 export default GameArea
