@@ -3,6 +3,9 @@ import Countdown from './Countdown'
 import Config from './Config'
 import ProgressPage from './ProgressPage'
 import PropTypes from 'prop-types';
+import IMAGES from '../images/images'
+
+
 
 const translations = {
   ru: {
@@ -10,7 +13,7 @@ const translations = {
     size: 'Размер',
     selectSize: 'Выберите размер поля',
     changeBackground: 'Изменить фон',
-    play: "Играть",
+    plays: "Играть",
     levels: 'Уровень',
     nextLevel: 'Следующий уровень',
     endGames: 'Завершить игру',
@@ -22,7 +25,7 @@ const translations = {
     size: 'Size',
     selectSize: 'Select the field size',
     changeBackground: 'Change the background',
-    play: "Play",
+    plays: "Play",
     levels: 'Level',
     nextLevel: 'Next level',
     endGames: 'End game',
@@ -41,13 +44,51 @@ const GameArea = ({ handleNextImage }) => {
   const [level, setLevel] = useState(1);
   const [countdown, setCountdown] = useState(100);
   const [timeNumber, setTimeNumber] = useState(1400)
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState('ru');
+ 
 
+  
+ 
+  //музыка
+  const correctSound = new Audio('sounds/correct.mp3');
+  const loseSound = new Audio('sounds/lose.mp3');
+  const [backgroundMusic, setBackgroundMusic] = useState(null);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  
+  const playBackgroundMusic = () => {
+    const music = new Audio('sounds/fon.mp3');
+    music.loop = true;
+    music.volume = 0.2
+    music.play();
+    return music;
+  };
+
+  const playMusic = () => {
+    const music = playBackgroundMusic();
+    setBackgroundMusic(music);
+    setIsMusicPlaying(true);
+  };
+
+  const stopMusic = () => {
+    if (backgroundMusic) {
+      backgroundMusic.pause();
+      setIsMusicPlaying(false);
+    }
+  };
+  const playCorrect = () => {
+    correctSound.play();
+  };
+  const playLose = () => {
+    loseSound.play();
+  };
+
+  
+  //язык
   const handleLanguageChange = (selectedLanguage) => {
     setLanguage(selectedLanguage);
   };
 
-  const { rating, size, selectSize, changeBackground, play, levels, nextLevel, endGames, ads, bonus
+  const { rating, size, selectSize, changeBackground, plays, levels, nextLevel, endGames, ads, bonus
   } = translations[language];
 
   const generateHorse = () => {
@@ -89,6 +130,7 @@ const GameArea = ({ handleNextImage }) => {
   }
 
   const startGame = () => {
+    playMusic(); 
     setScore(0)
     setHorse([]);
     setGameOver(false)
@@ -113,6 +155,7 @@ const GameArea = ({ handleNextImage }) => {
   }
 
   const endGame = () => {
+    stopMusic()
     setGameOver(true)
     setHorseTimeout(null)
     setHorse([])
@@ -126,6 +169,8 @@ const GameArea = ({ handleNextImage }) => {
   }, [horseTimeout])
 
   const handleCrabClick = () => {
+    stopMusic()
+    playLose()
     setGameOver(true)
     setCountdown(100)
     setHorseTimeout(null)
@@ -137,25 +182,27 @@ const GameArea = ({ handleNextImage }) => {
 
     return (
       <>
-        <h2 className='score-start'>Счёт: {score}</h2>
+        <h2 className='score-start'>{rating}: {score}</h2>
         <div className='language'>
           <button onClick={() => handleLanguageChange('en')} className='language-button'>
-          <img src='/en.png' alt='flag en' width={50} height={25} />
-          Eng</button>
+            <img src={IMAGES.en} alt='flag en' width={50} height={25} />
+            Eng</button>
           <button onClick={() => handleLanguageChange('ru')} className='language-button'>
-          <img src='/ru.png' alt='flag ru' width={50} height={25} />
+            <img src={IMAGES.ru} alt='flag ru' width={50} height={25} />
             Рус</button>
         </div>
 
-        <span className='size-start'>Размер: {columns}  X {rows}</span>
+        <span className='size-start'>{size}: {columns}  X {rows}</span>
         <Config
           columns={columns}
           setColumns={setColumns}
           rows={rows}
           setRows={setRows}
           handleNextImage={handleNextImage}
+          selectSize={selectSize}
+          changeBackground={changeBackground}
         />
-        <button className="glow-on-hover" onClick={startGame}>Играть</button>
+        <button className="glow-on-hover" onClick={startGame}>{plays}</button>
       </>
     )
   }
@@ -172,20 +219,41 @@ const GameArea = ({ handleNextImage }) => {
         setHorseTimeout={setHorseTimeout}
         generateHorse={generateHorse}
         activateHorse={activateHorse}
+        levels={levels}
+        rating={rating}
+        nextLevel={nextLevel}
+        endGames={endGames}
+        ads={ads}
+        bonus={bonus}
       />)
   } else if (countdown !== 0 && !gameOver) {
     return (
       <>
         <div className='score-container'>
-          <h2 className='score-text'>Score: {score}</h2>
+          <h2 className='score-text'>{rating}: {score}</h2>
           <Countdown updateCountdown={setCountdown} initialCountdown={countdown} />
           <div className='setting'>
-            <img src='/play.png' alt='play' width={35} height={35} />
-            <img src='/house.png' alt='house' width={35} height={35} onClick={endGame} />
+          <div className='music-controls'>
+          <button
+            className='setting-button'
+            onClick={playMusic}
+            style={{ display: isMusicPlaying ? 'none' : 'block' }}
+          >
+           <img src={IMAGES.stop} alt='play' width={35} height={35} />
+          </button>
+          <button
+            className='setting-button'
+            onClick={stopMusic}
+            style={{ display: isMusicPlaying ? 'block' : 'none' }}
+          >
+            <img src={IMAGES.play} alt='play' width={35} height={35} />
+          </button>
+          </div>
+            <img src={IMAGES.house} alt='house' width={35} height={35} onClick={endGame} className='setting-img' />
           </div>
         </div>
         <span className="countdown">
-          УРОВЕНЬ:{level}
+          {levels}:{level}
         </span>
         <div
           className='horse-container'
@@ -199,11 +267,11 @@ const GameArea = ({ handleNextImage }) => {
               <div key={individualHorse.id} className={`horse ${individualHorse.active ? 'active' : ''}`}>
                 <div onClick={() => handleHorseClick(index)}>
                   {individualHorse.hit ? (
-                    <img src='/flash.png' alt='flash' />
+                    <img src={IMAGES.flash} alt='flash' />
                   ) : (individualHorse.isCrab ? (
-                    <img src='/crab.png' alt='crab' width={80} height={80} onClick={handleCrabClick} />
+                    <img src={IMAGES.crab} alt='crab' width={80} height={80} onClick={handleCrabClick} />
                   ) : (
-                    <img className="img-seahorse" src='/seahorse.png' alt='seahorse' draggable='false' />
+                    <img className="img-seahorse" src={IMAGES.seahorse} alt='seahorse' draggable='false' onClick={playCorrect} />
                   ))}
                 </div>
               </div>

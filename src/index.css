@@ -5,6 +5,14 @@
 html {
   box-sizing: border-box;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -webkit-text-size-adjust: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 *,
@@ -21,8 +29,6 @@ body {
   line-height: 1.5;
   font-family: cursive;
 }
-
-
 
 main {
   margin-inline: auto;
@@ -57,8 +63,9 @@ h1 {
   backdrop-filter: blur(10px);
 }
 .size-start {
-  font-size: 1.3rem;
-
+  display: flex;
+  font-size: 1.1rem;
+  margin-top: 15px;
   color: rgb(255, 255, 0);
   border-radius: 5px;
   backdrop-filter: blur(20px);
@@ -99,7 +106,7 @@ h1 {
   width: fit-content;
   height: fit-content;
 }
-.next-image{
+.next-image {
   cursor: pointer;
 }
 .language {
@@ -107,9 +114,8 @@ h1 {
   flex-wrap: wrap;
   justify-content: space-between;
   width: 250px;
-  
 }
-.language-button{
+.language-button {
   color: yellow;
   background: blue;
   border-radius: 4px;
@@ -118,7 +124,7 @@ h1 {
   cursor: pointer;
 }
 .language-button:active {
-  background-color:#07b6f1bd;
+  background-color: #07b6f1bd;
 }
 .config-button {
   box-sizing: border-box;
@@ -195,6 +201,9 @@ h1 {
   width: 100px;
   gap: 2;
 }
+.setting-img {
+  cursor: pointer;
+}
 .countdown span {
   margin-inline-end: 0.5rem;
 }
@@ -222,16 +231,20 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 30px calc(10rem - 10px);
   height: 40vh;
-  padding: 2px 20px;
+  padding: 0 2px;
 }
 .progress-span {
   font-size: 1.2rem;
   color: yellow;
- 
 }
-
+.setting-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
 /* -------Красивые буквы----------------- */
 .styled {
   font-family: Barlow;
@@ -464,27 +477,53 @@ h1 {
   font-size: 1.5rem;
 }
 
+@media (max-width: 992px) {
+  .config-button,
+  .button-desctop {
+    margin-block: 0.7rem;
+    padding: 0.4rem 0.5rem;
+  }
+  .glow-on-hover {
+    width: 150px;
+    height: 45px;
+  }
+}
+
 @media (min-width: 992px) {
   .horse-container {
     grid-gap: 0.5rem;
     padding: 0.5rem;
   }
+  .language {
+    width: 600px;
+  }
+}
 
-  @media (min-width: 920px) and (min-height: 800px) {
-    .button-desctop {
-      box-sizing: border-box;
-      background-color: #07b6f1bd;
-      margin-block: 1.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: yellow;
-      width: 30%;
-      transition: transform 0.3s ease;
-      opacity: 1;
-      pointer-events: auto;
-    }
+@media (min-width: 920px) and (min-height: 800px) {
+  .button-desctop {
+    box-sizing: border-box;
+    background-color: #07b6f1bd;
+    margin-block: 1.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: yellow;
+    width: 30%;
+    transition: transform 0.3s ease;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .size-start,
+  .score-start {
+    font-size: 1.7rem;
+  }
+}
+@media (max-width: 640px) {
+  .score-start,
+  .score-text,
+  .countdown {
+    font-size: 1.2rem;
   }
 }

@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import GameArea from './components/GameArea';
 import ProgressPage from './components/ProgressPage';
 import { useState } from 'react';
-
+import IMAGES from './images/images'
 
 
 const AppWrapper = () => {
@@ -17,7 +17,7 @@ const AppWrapper = () => {
     }
   };
 
-  const imageURL = `url(../area${imageIndex}.png)`; // Формирование URL изображения
+  const imageURL = IMAGES[`image${imageIndex}`]; // Формирование URL изображения
 
   return (
     <div
@@ -26,10 +26,10 @@ const AppWrapper = () => {
         flexDirection: 'column',
         alignItems: 'center',
         minHeight: '100vh',
-        backgroundImage: imageURL,
+        backgroundImage: `url(${imageURL})`,
         backgroundPosition: '',
         backgroundSize: 'cover',
-        transition: 'background 1s ease',
+        transition: 'background .5s ease',
       }}
     >
       <Routes>
