@@ -1,12 +1,18 @@
 import PropTypes from 'prop-types';
 
-const Config = ({ setColumns, setRows, handleNextImage, selectSize, changeBackground }) => {
+const Config = ({ setColumns, setRows, handleNextImage, selectSize, changeBackground, playNext }) => {
   const handleSetColumns = (value) => {
     const columns = parseInt(value.split('*')[0], 10);
     const rows = parseInt(value.split('*')[1], 10);
     setColumns(columns);
     setRows(rows);
+    playNext()
   };
+
+  function nextBackground() {
+    handleNextImage()
+    playNext()
+  }
 
   return (
 
@@ -42,7 +48,7 @@ const Config = ({ setColumns, setRows, handleNextImage, selectSize, changeBackgr
           6x6
         </button>
       </div>
-      <span className='next-image' onClick={handleNextImage}> {changeBackground} </span>
+      <span className='next-image' onClick={nextBackground}> {changeBackground} </span>
     </div>
 
   );
@@ -56,7 +62,8 @@ Config.propTypes = {
   setRows: PropTypes.func,
   handleNextImage: PropTypes.func,
   selectSize: PropTypes.string,
-  changeBackground: PropTypes.string
+  changeBackground: PropTypes.string,
+  playNext: PropTypes.func
 };
 
 export default Config;

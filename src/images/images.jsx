@@ -16,6 +16,7 @@ const IMAGES = {
     play: new URL('./play.png', import.meta.url).href,
     seahorse: new URL('./seahorse.png', import.meta.url).href,
     stop: new URL('./stop.png', import.meta.url).href,
+    
 
     }
 

@@ -4,71 +4,41 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Игра Vite + React</title>
-    <script>
-      let ysdk;
-
-      function initSDK() {
-        YaGames.init().then((ysdk_) => {
-          ysdk = ysdk_;
-          ysdk.adv.showFullscreenAdv({
-            callbacks: {
-              onClose: (wasShown) => {
-                console.info("First close");
-              },
-            },
-          });
-        });
-      }
-
-      document.addEventListener("DOMContentLoaded", () => {
-        const buttonElem = document.querySelector("#button");
-
-        let commonCounter = 0;
-        buttonElem.addEventListener("click", () => {
-          let counter = 0;
-
-          function getCallback(callbackName) {
-            return () => {
-              counter += 1;
-              commonCounter += 1;
-
-              if (commonCounter % 3 === 0) {
-                throw new Error(
-                  `Test error in ${callbackName}, everything okey, it should not abort other code execution`
-                );
-              }
-
-              console.info(
-                `showFullscreenAdv; callback ${callbackName}; ${counter} call`
-              );
-            };
-          }
-
-          function makeSomethingImportant() {
-            console.info("It's very important 'console.info'");
-          }
-
-          if (ysdk) {
-            ysdk.adv.showFullscreenAdv({
-              callbacks: {
-                onClose: makeSomethingImportant,
-                onOpen: getCallback("onOpen"),
-                onError: function (error) {
-                  console.error(error);
-                },
-                onOffline: getCallback("onOffline"),
-              },
-            });
-          } else {
-            makeSomethingImportant();
-          }
-        });
-      });
-    </script>
+    <title>Поймай морского конька</title>
+    <!-- <script src="https://yandex.ru/games/sdk/v2"></script> -->
+    
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <!-- <script>
+      YaGames.init({
+        adv: {
+          onAdvClose: (wasShown) => {
+            console.info("adv closed");
+          },
+        },
+      }).then((ysdk) => {
+        ysdk.adv.showFullscreenAdv();
+        window.ysdk = ysdk;
+         });
+
+      function ShowAd() {
+        window.ysdk.adv.showFullscreenAdv({
+          callbacks: {
+            onClose: function (wasShown) {
+              // some action after close
+            },
+            onError: function (error) {
+              // some action on error
+            },
+          },
+        });
+      }
+     
+
+     
+      
+    </script> -->
   </body>
 </html>

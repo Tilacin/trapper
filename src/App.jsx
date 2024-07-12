@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import GameArea from './components/GameArea';
 import ProgressPage from './components/ProgressPage';
 import { useState } from 'react';
-import IMAGES from './images/images'
+import IMAGES from './images/images';
 
 
 const AppWrapper = () => {
@@ -22,7 +22,7 @@ const AppWrapper = () => {
   return (
     <div
       style={{
-        display:'flex',
+        display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         minHeight: '100vh',
@@ -33,8 +33,9 @@ const AppWrapper = () => {
       }}
     >
       <Routes>
-        <Route path="/" element={<GameArea handleNextImage={handleNextImage}/>} />
+        <Route path="/" element={<GameArea handleNextImage={handleNextImage} />} />
         <Route path="/progress" element={<ProgressPage />} />
+        <Route path="*" element={<GameArea handleNextImage={handleNextImage} />} />
       </Routes>
     </div>
   );

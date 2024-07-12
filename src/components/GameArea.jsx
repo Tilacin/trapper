@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import IMAGES from '../images/images'
 
 
-
 const translations = {
   ru: {
     rating: 'Счёт',
@@ -17,8 +16,7 @@ const translations = {
     levels: 'Уровень',
     nextLevel: 'Следующий уровень',
     endGames: 'Завершить игру',
-    ads: 'За просмотр рекламы',
-    bonus: 'Бонусный уровень',
+
   },
   en: {
     rating: 'Score',
@@ -29,8 +27,7 @@ const translations = {
     levels: 'Level',
     nextLevel: 'Next level',
     endGames: 'End game',
-    ads: 'For watching the advertisement',
-    bonus: 'Bonus Level',
+
   },
 };
 
@@ -45,50 +42,57 @@ const GameArea = ({ handleNextImage }) => {
   const [countdown, setCountdown] = useState(100);
   const [timeNumber, setTimeNumber] = useState(1400)
   const [language, setLanguage] = useState('ru');
- 
 
-  
- 
   //музыка
   const correctSound = new Audio('sounds/correct.mp3');
   const loseSound = new Audio('sounds/lose.mp3');
-  const [backgroundMusic, setBackgroundMusic] = useState(null);
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-  
-  const playBackgroundMusic = () => {
-    const music = new Audio('sounds/fon.mp3');
-    music.loop = true;
-    music.volume = 0.2
-    music.play();
-    return music;
-  };
+  const musicGameOver = new Audio('sounds/gameOver.mp3');
+  const musicGameStart = new Audio('sounds/start.mp3');
+  const winnerSound = new Audio('sounds/winnner.mp3');
+  const musicBell = new Audio('sounds/bell.mp3');
+
+  const [isMusicPlaying, setIsMusicPlaying] = useState(true);
 
   const playMusic = () => {
-    const music = playBackgroundMusic();
-    setBackgroundMusic(music);
+    playNext()
     setIsMusicPlaying(true);
+
   };
 
   const stopMusic = () => {
-    if (backgroundMusic) {
-      backgroundMusic.pause();
-      setIsMusicPlaying(false);
-    }
-  };
-  const playCorrect = () => {
-    correctSound.play();
-  };
-  const playLose = () => {
-    loseSound.play();
+    playNext()
+    setIsMusicPlaying(false);
+
   };
 
-  
+  const playCorrect = () => {
+    isMusicPlaying ? correctSound.play() : correctSound.pause()
+
+  };
+  const playLose = () => {
+    isMusicPlaying ? loseSound.play() : loseSound.pause()
+  };
+  const playGameOver = () => {
+    isMusicPlaying ? musicGameOver.play() : musicGameOver.pause()
+  }
+  const playGameStart = () => {
+    isMusicPlaying ? musicGameStart.play() : musicGameStart.pause()
+  }
+  const playNext = () => {
+    isMusicPlaying ? musicBell.play() : musicBell.pause()
+  }
+  const playWinner = () => {
+    isMusicPlaying ? winnerSound.play() : winnerSound.pause()
+  }
+
+
   //язык
   const handleLanguageChange = (selectedLanguage) => {
     setLanguage(selectedLanguage);
+    playNext()
   };
 
-  const { rating, size, selectSize, changeBackground, plays, levels, nextLevel, endGames, ads, bonus
+  const { rating, size, selectSize, changeBackground, plays, levels, nextLevel, endGames
   } = translations[language];
 
   const generateHorse = () => {
@@ -130,7 +134,7 @@ const GameArea = ({ handleNextImage }) => {
   }
 
   const startGame = () => {
-    playMusic(); 
+    playGameStart()
     setScore(0)
     setHorse([]);
     setGameOver(false)
@@ -155,7 +159,8 @@ const GameArea = ({ handleNextImage }) => {
   }
 
   const endGame = () => {
-    stopMusic()
+
+    playGameOver()
     setGameOver(true)
     setHorseTimeout(null)
     setHorse([])
@@ -169,24 +174,38 @@ const GameArea = ({ handleNextImage }) => {
   }, [horseTimeout])
 
   const handleCrabClick = () => {
-    stopMusic()
     playLose()
     setGameOver(true)
     setCountdown(100)
     setHorseTimeout(null)
+    setScore(0);
   }
-
-
 
   if (gameOver) {
 
     return (
-      <>
-        <h2 className='score-start'>{rating}: {score}</h2>
+      <div className='start-container'>
+        <h2 className='score-start'></h2>
         <div className='language'>
           <button onClick={() => handleLanguageChange('en')} className='language-button'>
             <img src={IMAGES.en} alt='flag en' width={50} height={25} />
             Eng</button>
+          <div className='music-controls'>
+            <button
+              className='setting-button'
+              onClick={playMusic}
+              style={{ display: isMusicPlaying ? 'none' : 'block' }}
+            >
+              <img src={IMAGES.stop} alt='play' width={35} height={35} />
+            </button>
+            <button
+              className='setting-button'
+              onClick={stopMusic}
+              style={{ display: isMusicPlaying ? 'block' : 'none' }}
+            >
+              <img src={IMAGES.play} alt='play' width={35} height={35} />
+            </button>
+          </div>
           <button onClick={() => handleLanguageChange('ru')} className='language-button'>
             <img src={IMAGES.ru} alt='flag ru' width={50} height={25} />
             Рус</button>
@@ -201,9 +220,10 @@ const GameArea = ({ handleNextImage }) => {
           handleNextImage={handleNextImage}
           selectSize={selectSize}
           changeBackground={changeBackground}
+          playNext={playNext}
         />
         <button className="glow-on-hover" onClick={startGame}>{plays}</button>
-      </>
+      </div>
     )
   }
   if (countdown === 0 && !gameOver) {
@@ -223,8 +243,11 @@ const GameArea = ({ handleNextImage }) => {
         rating={rating}
         nextLevel={nextLevel}
         endGames={endGames}
-        ads={ads}
-        bonus={bonus}
+        playWinner={playWinner}
+        playGameStart={playGameStart}
+        playMusic={playMusic}
+        stopMusic={stopMusic}
+        isMusicPlaying={isMusicPlaying}
       />)
   } else if (countdown !== 0 && !gameOver) {
     return (
@@ -233,22 +256,22 @@ const GameArea = ({ handleNextImage }) => {
           <h2 className='score-text'>{rating}: {score}</h2>
           <Countdown updateCountdown={setCountdown} initialCountdown={countdown} />
           <div className='setting'>
-          <div className='music-controls'>
-          <button
-            className='setting-button'
-            onClick={playMusic}
-            style={{ display: isMusicPlaying ? 'none' : 'block' }}
-          >
-           <img src={IMAGES.stop} alt='play' width={35} height={35} />
-          </button>
-          <button
-            className='setting-button'
-            onClick={stopMusic}
-            style={{ display: isMusicPlaying ? 'block' : 'none' }}
-          >
-            <img src={IMAGES.play} alt='play' width={35} height={35} />
-          </button>
-          </div>
+            <div className='music-controls'>
+              <button
+                className='setting-button'
+                onClick={playMusic}
+                style={{ display: isMusicPlaying ? 'none' : 'block' }}
+              >
+                <img src={IMAGES.stop} alt='play' width={35} height={35} />
+              </button>
+              <button
+                className='setting-button'
+                onClick={stopMusic}
+                style={{ display: isMusicPlaying ? 'block' : 'none' }}
+              >
+                <img src={IMAGES.play} alt='play' width={35} height={35} />
+              </button>
+            </div>
             <img src={IMAGES.house} alt='house' width={35} height={35} onClick={endGame} className='setting-img' />
           </div>
         </div>
@@ -258,18 +281,20 @@ const GameArea = ({ handleNextImage }) => {
         <div
           className='horse-container'
           style={{
+            display: 'grid',
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
             gridTemplateRows: `repeat(${rows}, 1fr)`,
+            gridAutoRows: 'minmax(50px, auto)'
           }}
         >
           {horse.map((individualHorse, index) => (
             individualHorse && (
               <div key={individualHorse.id} className={`horse ${individualHorse.active ? 'active' : ''}`}>
-                <div onClick={() => handleHorseClick(index)}>
+                <div onClick={() => handleHorseClick(index)} className='image-wrapper'>
                   {individualHorse.hit ? (
                     <img src={IMAGES.flash} alt='flash' />
                   ) : (individualHorse.isCrab ? (
-                    <img src={IMAGES.crab} alt='crab' width={80} height={80} onClick={handleCrabClick} />
+                    <img src={IMAGES.crab} alt='crab' className='crab' onClick={handleCrabClick} />
                   ) : (
                     <img className="img-seahorse" src={IMAGES.seahorse} alt='seahorse' draggable='false' onClick={playCorrect} />
                   ))}
